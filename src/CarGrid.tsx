@@ -174,19 +174,24 @@ const CarGrid: React.FC = () => {
       sortable: true,
       filter: true
     },
-    pagination: true,
+    pagination: false,
     paginationPageSize: 10,
     rowSelection: 'multiple',
     suppressClickEdit: true // Prevent accidental editing when clicking menu
   }), []);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>🚗 Car Inventory Management</h2>
+    <div style={{ 
+      padding: '20px', 
+      backgroundColor: '#ffffff',
+      minHeight: '100vh',
+      color: '#213547'
+    }}>
+      {/* <h2>🚗 Car Inventory Management</h2>
       <p style={{ marginBottom: '20px', color: '#666' }}>
         Manage your car inventory with sortable, filterable columns. 
         Use the action menu (⋮) to edit, view, or delete cars.
-      </p>
+      </p> */}
       
       <ReusableAgGrid<Car>
         data={carData}

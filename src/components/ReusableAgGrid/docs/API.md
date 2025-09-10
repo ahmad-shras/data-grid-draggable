@@ -49,19 +49,35 @@ Configuration object for grid behavior and features.
 
 ```typescript
 interface GridConfig {
-  enableColumnVisibilityControls?: boolean;  // Show/hide column controls
-  enableSidebar?: boolean;                   // Enable AG Grid sidebar
-  enableColumnPersistence?: boolean;         // Save column state
-  storageKey?: string;                      // LocalStorage key prefix
-  suppressMovableColumns?: boolean;          // Disable column reordering
-  animateRows?: boolean;                    // Enable row animations
-  defaultColDef?: ColDef;                   // Default column properties
-  pagination?: boolean;                     // Enable pagination
-  paginationPageSize?: number;              // Rows per page
-  rowSelection?: 'single' | 'multiple';    // Row selection mode
-  [key: string]: any;                      // Additional AG Grid props
+  enableColumnVisibilityControls?: boolean;       // Show/hide column controls
+  columnVisibilityButtonVariant?: 'icon' | 'text' | 'both'; // Button display style
+  columnVisibilityButtonPosition?: 'left' | 'right';        // Button alignment
+  columnVisibilityButtonText?: string;             // Custom button text
+  enableSidebar?: boolean;                        // Enable AG Grid sidebar
+  enableColumnPersistence?: boolean;              // Save column state
+  storageKey?: string;                           // LocalStorage key prefix
+  suppressMovableColumns?: boolean;               // Disable column reordering
+  animateRows?: boolean;                         // Enable row animations
+  defaultColDef?: ColDef;                        // Default column properties
+  pagination?: boolean;                          // Enable pagination
+  paginationPageSize?: number;                   // Rows per page
+  rowSelection?: 'single' | 'multiple';         // Row selection mode
+  [key: string]: any;                           // Additional AG Grid props
 }
 ```
+
+#### Column Visibility Control Options
+
+- **`columnVisibilityButtonVariant`**: Controls the button appearance
+  - `'icon'`: Compact icon button with count badge
+  - `'text'`: Text-only button with count display  
+  - `'both'`: Icon + text combination (default)
+
+- **`columnVisibilityButtonPosition`**: Controls button alignment in toolbar
+  - `'left'`: Align to left side of toolbar (default)
+  - `'right'`: Align to right side of toolbar
+
+- **`columnVisibilityButtonText`**: Custom text for the button (default: "Columns")
 
 ## Methods
 
@@ -219,3 +235,77 @@ const importGridState = (api: GridApi, stateJson: string) => {
   }
 };
 ```
+
+## Column Visibility Controls
+
+### Overview
+
+The new column visibility controls provide a modern popover interface for managing column visibility, replacing the previous inline list format. The controls feature a professional toolbar integration with multiple display options.
+
+### Features
+
+- **Popover Interface**: Clean, space-saving popover menu
+- **Multiple Button Variants**: Icon-only, text-only, or combined display
+- **Flexible Positioning**: Left or right alignment in toolbar
+- **Visual Feedback**: Shows visible/total column count
+- **Interactive Design**: Hover effects and smooth animations
+- **Responsive**: Adapts to different screen sizes
+
+### Configuration Examples
+
+#### Icon Button (Compact)
+```typescript
+const config = {
+  enableColumnVisibilityControls: true,
+  columnVisibilityButtonVariant: 'icon',
+  columnVisibilityButtonPosition: 'left'
+};
+```
+
+#### Text Button (Custom Label)
+```typescript
+const config = {
+  enableColumnVisibilityControls: true,
+  columnVisibilityButtonVariant: 'text',
+  columnVisibilityButtonPosition: 'right',
+  columnVisibilityButtonText: 'Configure Columns'
+};
+```
+
+#### Combined Button (Default)
+```typescript
+const config = {
+  enableColumnVisibilityControls: true,
+  columnVisibilityButtonVariant: 'both',
+  columnVisibilityButtonPosition: 'left',
+  columnVisibilityButtonText: 'Manage Columns'
+};
+```
+
+### Styling Customization
+
+The column visibility controls can be customized via the component props:
+
+```typescript
+import { ColumnVisibilityControls } from './components/ReusableAgGrid';
+
+<ColumnVisibilityControls
+  columns={columns}
+  columnVisibility={columnVisibility}
+  onToggleVisibility={handleToggle}
+  variant="both"
+  position="right"
+  buttonText="Columns"
+  buttonStyle={{ backgroundColor: '#f0f8ff' }}
+  popoverStyle={{ minWidth: '250px' }}
+  titleStyle={{ color: '#333' }}
+/>
+```
+
+### Best Practices
+
+1. **For compact layouts**: Use `variant: 'icon'` to save space
+2. **For clarity**: Use `variant: 'both'` (default) to show all information
+3. **For branding**: Use `variant: 'text'` with custom `buttonText`
+4. **Mobile responsive**: Icon variant works best on smaller screens
+5. **Accessibility**: All variants include proper ARIA labels and keyboard support

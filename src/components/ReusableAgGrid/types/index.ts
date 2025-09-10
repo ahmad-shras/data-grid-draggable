@@ -12,6 +12,9 @@ export interface GridColumn<T = any> extends Omit<ColDef<T>, 'field'> {
 
 export interface GridConfig {
   enableColumnVisibilityControls?: boolean;
+  columnVisibilityButtonVariant?: 'icon' | 'text' | 'both';
+  columnVisibilityButtonPosition?: 'left' | 'right';
+  columnVisibilityButtonText?: string;
   enableSidebar?: boolean;
   enableColumnPersistence?: boolean;
   storageKey?: string;

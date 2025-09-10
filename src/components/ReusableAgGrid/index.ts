@@ -34,6 +34,9 @@ export const createGridColumn = <T>(
 
 export const createGridConfig = (options?: Partial<GridConfig>): GridConfig => ({
   enableColumnVisibilityControls: true,
+  columnVisibilityButtonVariant: 'both',
+  columnVisibilityButtonPosition: 'left',
+  columnVisibilityButtonText: 'Columns',
   enableSidebar: true,
   enableColumnPersistence: true,
   storageKey: 'agGrid',

@@ -10,6 +10,9 @@ import type { ReusableAgGridProps, GridConfig } from './types';
 
 const defaultConfig: Required<GridConfig> = {
   enableColumnVisibilityControls: true,
+  columnVisibilityButtonVariant: 'both',
+  columnVisibilityButtonPosition: 'left',
+  columnVisibilityButtonText: 'Columns',
   enableSidebar: true,
   enableColumnPersistence: true,
   storageKey: 'agGrid',
@@ -149,7 +152,15 @@ export const ReusableAgGrid = <T,>({
     // Spread any additional config
     ...Object.fromEntries(
       Object.entries(mergedConfig).filter(([key]) => 
-        !['enableColumnVisibilityControls', 'enableSidebar', 'enableColumnPersistence', 'storageKey'].includes(key)
+        ![
+          'enableColumnVisibilityControls', 
+          'columnVisibilityButtonVariant',
+          'columnVisibilityButtonPosition', 
+          'columnVisibilityButtonText',
+          'enableSidebar', 
+          'enableColumnPersistence', 
+          'storageKey'
+        ].includes(key)
       )
     )
   }), [
@@ -192,38 +203,54 @@ export const ReusableAgGrid = <T,>({
 
   return (
     <div className={className} style={containerStyle}>
-      {/* Custom Column Visibility Controls */}
-      {mergedConfig.enableColumnVisibilityControls && (
-        <ColumnVisibilityControls
-          columns={columns}
-          columnVisibility={columnVisibility}
-          onToggleVisibility={handleToggleVisibility}
-          disabled={!isLoaded}
-        />
-      )}
-
-      {/* Reset Button */}
-      {mergedConfig.enableColumnPersistence && (
-        <div style={{ marginBottom: '10px' }}>
-          <button 
-            onClick={handleReset}
-            disabled={!isLoaded}
-            style={{ 
-              padding: '6px 12px',
-              fontSize: '12px',
-              cursor: isLoaded ? 'pointer' : 'not-allowed',
-              backgroundColor: isLoaded ? '#f0f0f0' : '#e0e0e0',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              marginRight: '8px'
-            }}
-            title="Reset all columns to default state"
-          >
-            🔄 Reset Columns
-          </button>
-          <span style={{ fontSize: '11px', color: '#666' }}>
-            {data.length} rows • Columns auto-saved
-          </span>
+      {/* Toolbar with controls */}
+      {(mergedConfig.enableColumnVisibilityControls || mergedConfig.enableColumnPersistence) && (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '10px',
+          padding: '8px 0',
+          borderBottom: '1px solid #e0e0e0'
+        }}>
+          {/* Left side controls */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {mergedConfig.enableColumnVisibilityControls && (
+              <ColumnVisibilityControls
+                columns={columns}
+                columnVisibility={columnVisibility}
+                onToggleVisibility={handleToggleVisibility}
+                disabled={!isLoaded}
+                variant={mergedConfig.columnVisibilityButtonVariant}
+                position={mergedConfig.columnVisibilityButtonPosition}
+                buttonText={mergedConfig.columnVisibilityButtonText}
+              />
+            )}
+            {mergedConfig.enableColumnPersistence && (
+              <button 
+                onClick={handleReset}
+                disabled={!isLoaded}
+                style={{ 
+                  padding: '6px 12px',
+                  fontSize: '12px',
+                  cursor: isLoaded ? 'pointer' : 'not-allowed',
+                  backgroundColor: isLoaded ? '#f0f0f0' : '#e0e0e0',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px'
+                }}
+                title="Reset all columns to default state"
+              >
+                🔄 Reset Columns
+              </button>
+            )}
+          </div>
+          
+          {/* Right side info */}
+          {mergedConfig.enableColumnPersistence && (
+            <div style={{ fontSize: '11px', color: '#666' }}>
+              {data.length} rows • Columns auto-saved
+            </div>
+          )}
         </div>
       )}
 

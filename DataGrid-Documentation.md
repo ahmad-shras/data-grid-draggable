@@ -1,19 +1,22 @@
 # Advanced DataGrid Component
 
-A comprehensive, production-ready React TypeScript data grid component built with AG Grid Community, featuring advanced column management, drag-and-drop reordering, visibility controls, and responsive design.
+A comprehensive, production-ready React TypeScript data grid component built with AG Grid Community, featuring modern popover column visibility controls, advanced column management, drag-and-drop reordering, and responsive design.
 
 ## 🚀 Features
 
 ### Core Features
+- **Modern Column Visibility**: Professional popover interface with multiple button variants
 - **Column Reordering**: Drag-and-drop column reordering with persistence
-- **Column Visibility**: Show/hide columns with intuitive menu controls
-- **Responsive Design**: Mobile-first responsive layout
+- **Clean Theming**: Light theme with improved contrast and professional styling
+- **Responsive Design**: Mobile-first responsive layout with adaptive controls
 - **TypeScript Support**: Full TypeScript integration with generics
 - **Performance Optimized**: Virtualization for large datasets
 - **Persistent State**: localStorage/sessionStorage integration
 - **Customizable**: Extensive theming and styling options
 
 ### Advanced Features
+- Flexible column visibility controls (icon, text, or combined variants)
+- Professional toolbar layout with proper spacing and alignment
 - Row selection (single/multiple)
 - Range selection
 - Sorting and filtering

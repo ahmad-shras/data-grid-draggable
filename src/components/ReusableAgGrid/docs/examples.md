@@ -2,6 +2,7 @@
 
 ## Table of Contents
 - [Basic Examples](#basic-examples)
+- [Column Visibility Controls](#column-visibility-controls)
 - [Advanced Examples](#advanced-examples)
 - [Real-World Scenarios](#real-world-scenarios)
 - [Custom Renderers](#custom-renderers)
@@ -79,6 +80,218 @@ const SelectableGrid = () => {
         columns={columns}
         config={config}
         onRowSelected={handleSelectionChanged}
+        height={400}
+      />
+    </div>
+  );
+};
+```
+
+## Column Visibility Controls
+
+### Modern Popover Interface
+
+The new column visibility controls provide a professional popover menu interface with multiple customization options.
+
+#### 1. Icon Button (Compact)
+
+Perfect for mobile and space-constrained layouts:
+
+```tsx
+import React from 'react';
+import { ReusableAgGrid, createGridConfig } from '../components/ReusableAgGrid';
+
+interface CompactData {
+  id: number;
+  name: string;
+  status: string;
+  date: string;
+}
+
+const CompactGrid = () => {
+  const data: CompactData[] = [
+    { id: 1, name: 'Task 1', status: 'Active', date: '2024-01-15' },
+    { id: 2, name: 'Task 2', status: 'Pending', date: '2024-01-16' },
+    { id: 3, name: 'Task 3', status: 'Complete', date: '2024-01-17' }
+  ];
+
+  const columns = [
+    { field: 'id', headerName: 'ID', colId: 'id', width: 70 },
+    { field: 'name', headerName: 'Task Name', colId: 'name', width: 200 },
+    { field: 'status', headerName: 'Status', colId: 'status', width: 120 },
+    { field: 'date', headerName: 'Due Date', colId: 'date', width: 120 }
+  ];
+
+  const config = createGridConfig({
+    columnVisibilityButtonVariant: 'icon',
+    columnVisibilityButtonPosition: 'left',
+    pagination: false
+  });
+
+  return (
+    <div style={{ width: '100%', height: '300px' }}>
+      <ReusableAgGrid
+        data={data}
+        columns={columns}
+        config={config}
+        height={300}
+      />
+    </div>
+  );
+};
+```
+
+#### 2. Text Button with Custom Label
+
+Great for clear, accessible interfaces:
+
+```tsx
+const AdminGrid = () => {
+  const config = createGridConfig({
+    columnVisibilityButtonVariant: 'text',
+    columnVisibilityButtonPosition: 'right',
+    columnVisibilityButtonText: 'Configure View',
+    pagination: false
+  });
+
+  return (
+    <div style={{ width: '100%', height: '400px' }}>
+      <ReusableAgGrid
+        data={userData}
+        columns={userColumns}
+        config={config}
+        height={400}
+      />
+    </div>
+  );
+};
+```
+
+#### 3. Combined Icon + Text (Recommended)
+
+The perfect balance of visual clarity and information:
+
+```tsx
+const DashboardGrid = () => {
+  const config = createGridConfig({
+    columnVisibilityButtonVariant: 'both',
+    columnVisibilityButtonPosition: 'left',
+    columnVisibilityButtonText: 'Table Settings',
+    enableColumnPersistence: true,
+    storageKey: 'dashboard-grid'
+  });
+
+  return (
+    <div style={{ width: '100%', height: '500px' }}>
+      <h3>Sales Dashboard</h3>
+      <ReusableAgGrid
+        data={salesData}
+        columns={salesColumns}
+        config={config}
+        height={500}
+      />
+    </div>
+  );
+};
+```
+
+#### 4. Responsive Column Controls
+
+Adapt the button variant based on screen size:
+
+```tsx
+import { useState, useEffect } from 'react';
+
+const ResponsiveGrid = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const config = createGridConfig({
+    columnVisibilityButtonVariant: isMobile ? 'icon' : 'both',
+    columnVisibilityButtonPosition: isMobile ? 'right' : 'left',
+    columnVisibilityButtonText: isMobile ? 'Cols' : 'Manage Columns',
+    enableColumnVisibilityControls: true
+  });
+
+  return (
+    <ReusableAgGrid
+      data={responsiveData}
+      columns={responsiveColumns}
+      config={config}
+      height={450}
+    />
+  );
+};
+```
+
+#### 5. Custom Styled Controls
+
+For advanced styling requirements:
+
+```tsx
+import { ColumnVisibilityControls } from '../components/ReusableAgGrid';
+
+const CustomStyledGrid = () => {
+  const [columnVisibility, setColumnVisibility] = useState({});
+  
+  const handleToggleVisibility = (fieldName: string) => {
+    setColumnVisibility(prev => ({
+      ...prev,
+      [fieldName]: !prev[fieldName]
+    }));
+  };
+
+  return (
+    <div>
+      {/* Custom toolbar with styled column controls */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        padding: '12px',
+        backgroundColor: '#f8f9fa',
+        borderRadius: '8px',
+        marginBottom: '16px'
+      }}>
+        <h3 style={{ margin: 0 }}>Custom Data Grid</h3>
+        
+        <ColumnVisibilityControls
+          columns={customColumns}
+          columnVisibility={columnVisibility}
+          onToggleVisibility={handleToggleVisibility}
+          variant="both"
+          position="right"
+          buttonText="View Options"
+          buttonStyle={{
+            backgroundColor: '#007acc',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            padding: '8px 16px',
+            fontWeight: '600'
+          }}
+          popoverStyle={{
+            borderRadius: '12px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+            border: '1px solid #e1e5e9'
+          }}
+          titleStyle={{
+            color: '#007acc',
+            borderBottom: '2px solid #007acc',
+            paddingBottom: '8px'
+          }}
+        />
+      </div>
+      
+      <ReusableAgGrid
+        data={customData}
+        columns={customColumns}
+        config={{ enableColumnVisibilityControls: false }} // Use custom controls
         height={400}
       />
     </div>

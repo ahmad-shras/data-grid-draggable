@@ -19,11 +19,13 @@ The `ReusableAgGrid` component is a comprehensive, production-ready data grid bu
 
 **Key Features:**
 - 🔄 **Column Persistence** - Automatically saves and restores column order, visibility, and width
-- 🎛️ **Visibility Controls** - Built-in UI for showing/hiding columns
-- 📱 **Responsive Design** - Adapts to different screen sizes
-- 🎨 **Theming Support** - Customizable themes and styling
+- 🎛️ **Modern Visibility Controls** - Professional popover interface for column management
+- 🎨 **Flexible UI Options** - Icon, text, or combined button variants with positioning control
+- 📱 **Responsive Design** - Adapts to different screen sizes with mobile-optimized controls
+- 🎨 **Clean Theming** - Light theme with professional styling and improved contrast
 - 📝 **TypeScript First** - Full type safety and IntelliSense support
 - ⚡ **Performance** - Optimized for large datasets with virtualization
+- 🛠️ **Professional Toolbar** - Organized control layout with proper spacing and alignment
 
 ### Installation
 
@@ -138,16 +140,19 @@ interface GridColumn<T = any> extends Omit<ColDef<T>, 'field'> {
 
 ```typescript
 interface GridConfig {
-  enableColumnVisibilityControls?: boolean;  // Default: true
-  enableSidebar?: boolean;                   // Default: true
-  enableColumnPersistence?: boolean;         // Default: true
-  storageKey?: string;                      // Default: 'agGrid'
-  suppressMovableColumns?: boolean;          // Default: false
-  animateRows?: boolean;                    // Default: true
-  defaultColDef?: ColDef;                   // Default column properties
-  pagination?: boolean;                     // Default: false
-  paginationPageSize?: number;              // Default: 10
-  rowSelection?: 'single' | 'multiple';    // Default: 'single'
+  enableColumnVisibilityControls?: boolean;              // Default: true
+  columnVisibilityButtonVariant?: 'icon' | 'text' | 'both'; // Default: 'both'
+  columnVisibilityButtonPosition?: 'left' | 'right';     // Default: 'left'
+  columnVisibilityButtonText?: string;                    // Default: 'Columns'
+  enableSidebar?: boolean;                               // Default: true
+  enableColumnPersistence?: boolean;                     // Default: true
+  storageKey?: string;                                  // Default: 'agGrid'
+  suppressMovableColumns?: boolean;                      // Default: false
+  animateRows?: boolean;                                // Default: true
+  defaultColDef?: ColDef;                               // Default column properties
+  pagination?: boolean;                                 // Default: false
+  paginationPageSize?: number;                          // Default: 10
+  rowSelection?: 'single' | 'multiple';                // Default: 'single'
 }
 ```
 
@@ -309,6 +314,146 @@ const ResponsiveGrid = () => {
       height={isMobile ? 400 : 600}
     />
   );
+};
+```
+
+---
+
+## Column Visibility Controls
+
+### Overview
+
+The ReusableAgGrid now features modern popover-based column visibility controls that provide a clean, professional interface for managing column display. The controls have been redesigned from the previous inline list to a space-saving popover menu with multiple customization options.
+
+### Features
+
+- **🎨 Multiple Button Variants**: Choose from icon-only, text-only, or combined display
+- **📍 Flexible Positioning**: Left or right alignment in the toolbar
+- **💫 Visual Feedback**: Shows visible/total column count with smooth animations
+- **🎯 Professional Design**: Clean popover interface with hover effects
+- **📱 Responsive**: Adapts to different screen sizes
+- **♿ Accessible**: Full keyboard navigation and ARIA support
+
+### Button Variants
+
+#### Icon Button (Compact)
+Perfect for mobile or space-constrained layouts:
+
+```tsx
+const config = {
+  enableColumnVisibilityControls: true,
+  columnVisibilityButtonVariant: 'icon',
+  columnVisibilityButtonPosition: 'left'
+};
+```
+
+**Features:**
+- Compact gear icon with count badge
+- Minimal space usage
+- Count badge shows visible columns
+- Ideal for mobile interfaces
+
+#### Text Button (Clear)
+Great for applications where clarity is important:
+
+```tsx
+const config = {
+  enableColumnVisibilityControls: true,
+  columnVisibilityButtonVariant: 'text',
+  columnVisibilityButtonPosition: 'right',
+  columnVisibilityButtonText: 'Configure Columns'
+};
+```
+
+**Features:**
+- Custom button text
+- Visible/total count display
+- Clear labeling for users
+- Better for accessibility
+
+#### Combined Button (Default)
+The best of both worlds:
+
+```tsx
+const config = {
+  enableColumnVisibilityControls: true,
+  columnVisibilityButtonVariant: 'both',
+  columnVisibilityButtonPosition: 'left',
+  columnVisibilityButtonText: 'Manage Columns'
+};
+```
+
+**Features:**
+- Icon + text combination
+- Full information display
+- Professional appearance
+- Default recommendation
+
+### Positioning Options
+
+#### Left Alignment (Default)
+```tsx
+const config = {
+  columnVisibilityButtonPosition: 'left'
+};
+```
+
+#### Right Alignment
+```tsx
+const config = {
+  columnVisibilityButtonPosition: 'right'
+};
+```
+
+### Advanced Customization
+
+For more control over styling, you can access the component directly:
+
+```tsx
+import { ColumnVisibilityControls } from './components/ReusableAgGrid';
+
+<ColumnVisibilityControls
+  columns={columns}
+  columnVisibility={columnVisibility}
+  onToggleVisibility={handleToggleVisibility}
+  variant="both"
+  position="right"
+  buttonText="Custom Text"
+  buttonStyle={{ 
+    backgroundColor: '#f0f8ff',
+    border: '2px solid #007acc'
+  }}
+  popoverStyle={{ 
+    minWidth: '300px',
+    maxHeight: '400px'
+  }}
+  titleStyle={{ 
+    color: '#007acc',
+    fontSize: '16px'
+  }}
+/>
+```
+
+### Migration from Previous Version
+
+If you were using the previous inline column visibility controls, the migration is automatic. The new popover interface is enabled by default when `enableColumnVisibilityControls: true` is set.
+
+**Before (automatic migration):**
+```tsx
+// Old inline list format is automatically upgraded
+const config = {
+  enableColumnVisibilityControls: true
+};
+```
+
+**After (with new options):**
+```tsx
+// Now with modern popover interface and customization
+const config = {
+  enableColumnVisibilityControls: true,
+  columnVisibilityButtonVariant: 'both',     // New option
+  columnVisibilityButtonPosition: 'left',    // New option  
+  columnVisibilityButtonText: 'Columns'      // New option
 };
 ```
 

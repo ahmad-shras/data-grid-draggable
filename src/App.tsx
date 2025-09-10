@@ -7,12 +7,14 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 function App() {
   return (
-
-    <>
-    
-    {/* <GridExample /> */}
-    <CarGrid />
-    </>
+    <div style={{ 
+      backgroundColor: '#ffffff', 
+      minHeight: '100vh', 
+      color: '#213547' 
+    }}>
+      {/* <GridExample /> */}
+      <CarGrid />
+    </div>
   )
 }
 
