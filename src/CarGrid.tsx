@@ -1,6 +1,9 @@
 import React, { useState, useMemo } from 'react';
+
 import ReusableAgGrid from './components/ReusableAgGrid';
+import ActionMenuCellRenderer from './components/ReusableAgGrid/components/ActionMenuCellRenderer';
 import type { GridColumn, GridConfig } from './components/ReusableAgGrid/types';
+
 interface Car {
   id: number;
   make: string;
@@ -14,8 +17,10 @@ interface Car {
 }
 
 const CarGrid: React.FC = () => {
+  // For navigation
+
   // Sample data
-  const [carData] = useState<Car[]>([
+  const [carData, setCarData] = useState<Car[]>([
     { id: 1, make: 'Toyota', model: 'Camry', price: 28450, electric: false, year: 2024, category: 'Sedan', color: 'White', rating: 4.5 },
     { id: 2, make: 'Ford', model: 'F-150', price: 39900, electric: false, year: 2024, category: 'Truck', color: 'Red', rating: 4.3 },
     { id: 3, make: 'Tesla', model: 'Model 3', price: 47990, electric: true, year: 2024, category: 'Sedan', color: 'Black', rating: 4.8 },
@@ -24,6 +29,34 @@ const CarGrid: React.FC = () => {
     { id: 6, make: 'Audi', model: 'e-tron', price: 65900, electric: true, year: 2024, category: 'SUV', color: 'Black', rating: 4.4 }
   ]);
 
+  // Action handlers
+  const handleView = (car: Car) => {
+    
+    console.log('Viewing car:', car);
+  };
+
+  const handleEdit = (car: Car) => {
+   
+    console.log('Editing car:', car);
+  };
+
+  const handleDuplicate = (car: Car) => {
+    const duplicatedCar = {
+      ...car,
+      id: Math.max(...carData.map(c => c.id)) + 1,
+      make: `${car.make} (Copy)`
+    };
+    setCarData(prev => [...prev, duplicatedCar]);
+    console.log('Duplicated car:', duplicatedCar);
+  };
+
+  const handleDelete = (car: Car) => {
+    if (window.confirm(`Are you sure you want to delete ${car.year} ${car.make} ${car.model}?`)) {
+      setCarData(prev => prev.filter(c => c.id !== car.id));
+      console.log('Deleted car:', car);
+    }
+  };
+
   // Column definitions
   const columns = useMemo<GridColumn<Car>[]>(() => [
     { 
@@ -31,8 +64,7 @@ const CarGrid: React.FC = () => {
       headerName: 'ID', 
       colId: 'id', 
       sortable: true, 
-      width: 80,
-    //   pinned: 'left'
+      width: 80
     },
     { 
       field: 'make', 
@@ -97,8 +129,39 @@ const CarGrid: React.FC = () => {
       colId: 'rating', 
       sortable: true,
       cellRenderer: (params) => '⭐'.repeat(Math.floor(params.value)) + ` ${params.value}`
+    },
+    // ✨ NEW ACTION COLUMN
+    {
+      field: 'id', // We use id field but this column is for actions
+      headerName: 'Actions',
+      colId: 'actions',
+      sortable: false,
+      filter: false,
+      width: 80,
+    //   pinned: 'right', // Pin to right side
+      cellRenderer: (params) => (
+        <ActionMenuCellRenderer
+          data={params.data}
+          onView={handleView}
+          onEdit={handleEdit}
+          onDuplicate={handleDuplicate}
+          onDelete={handleDelete}
+          customActions={[
+            {
+              label: 'Share',
+              icon: '🔗',
+              onClick: (car) => {
+                navigator.clipboard.writeText(`Check out this ${car.year} ${car.make} ${car.model}!`);
+                alert('Car details copied to clipboard!');
+              }
+            }
+          ]}
+        />
+      ),
+      suppressMovable: true, // Prevent moving this column
+      lockPosition: 'right'   // Keep it locked to the right
     }
-  ], []);
+  ], [ carData]); // Add dependencies
 
   // Grid configuration
   const gridConfig = useMemo<GridConfig>(() => ({
@@ -113,7 +176,8 @@ const CarGrid: React.FC = () => {
     },
     pagination: true,
     paginationPageSize: 10,
-    rowSelection: 'multiple'
+    rowSelection: 'multiple',
+    suppressClickEdit: true // Prevent accidental editing when clicking menu
   }), []);
 
   return (
@@ -121,7 +185,7 @@ const CarGrid: React.FC = () => {
       <h2>🚗 Car Inventory Management</h2>
       <p style={{ marginBottom: '20px', color: '#666' }}>
         Manage your car inventory with sortable, filterable columns. 
-        Column order and visibility are automatically saved!
+        Use the action menu (⋮) to edit, view, or delete cars.
       </p>
       
       <ReusableAgGrid<Car>
@@ -129,11 +193,8 @@ const CarGrid: React.FC = () => {
         columns={columns}
         config={gridConfig}
         onRowClicked={(params) => {
-          console.log('Car selected:', params.data);
-          alert(`Selected: ${params.data.year} ${params.data.make} ${params.data.model}`);
-        }}
-        onRowSelected={(params) => {
-          console.log('Row selection changed:', params.data);
+          // Only log, don't navigate on row click to avoid conflicts
+          console.log('Car row clicked:', params.data);
         }}
         height={600}
       />
