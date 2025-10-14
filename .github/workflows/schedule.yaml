@@ -1,14 +1,13 @@
----
 name: Scheduled Test Workflow
+
 on:
+  workflow_dispatch:        # 👈 allows manual runs
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/5 * * * *"  # every 5 minutes (UTC)
+
 jobs:
   test_schedule:
     runs-on: ubuntu-latest
     steps:
       - name: Echo current time
         run: echo "This current server time is $(date)"
-
-
-
